@@ -52,7 +52,7 @@ for event in calendar.walk("VEVENT"):
         kickoff - timedelta(minutes=30)
     )
 
-    if reminder_time > datetime.now():
+    if reminder_time > datetime.now(tz=pytz.utc):
 
         scheduler.add_job(
             send_reminder,
