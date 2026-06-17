@@ -1,0 +1,34 @@
+name: FIFA Bot Monitor
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Run every hour
+  workflow_dispatch:     # Manual trigger
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Create config from secrets
+        run: |
+          cat > config.py << EOF
+          import os
+          BOT_TOKEN = "${{ secrets.BOT_TOKEN }}"
+          CHAT_ID = "${{ secrets.CHAT_ID }}"
+          API_KEY = "${{ secrets.API_KEY }}"
+          EOF
+      
+      - name: Run bot
+        run: python bot.py
